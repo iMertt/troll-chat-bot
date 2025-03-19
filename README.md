@@ -18,7 +18,7 @@ A fun and interactive chatbot built with DialoGPT, featuring a modern web interf
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/iMertt/ai-bot.git
+git clone https://github.com/iMertt/troll-chat-bot.git
 cd ai-bot
 ```
 
