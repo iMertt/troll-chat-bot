@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DialoGPT Troll Chatbot</a></title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f7fb;
+        color: #2d3748;
+      }
+      .container {
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-top: 20px;
+      }
+      h1 {
+        text-align: center;
+        color: #4a5568;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+      }
+      #chat-container {
+        height: 500px;
+        padding: 20px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        background-color: #f8fafc;
+      }
+      .message {
+        margin: 10px 0;
+        padding: 12px 18px;
+        border-radius: 15px;
+        max-width: 70%;
+        animation: fadeIn 0.3s ease-in;
+      }
+      .user-message {
+        background-color: #667eea;
+        color: white;
+        margin-left: auto;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+      }
+      .bot-message {
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+      .input-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      #user-input {
+        flex: 1;
+        padding: 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+      #user-input:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      button {
+        padding: 15px 25px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      #send-button {
+        background-color: #667eea;
+        color: white;
+      }
+      #reset-button {
+        background-color: #f7fafc;
+        color: #4a5568;
+        border: 2px solid #e2e8f0;
+      }
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Scrollbar styling */
+      #chat-container::-webkit-scrollbar {
+        width: 8px;
+      }
+      #chat-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      #chat-container::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 4px;
+      }
+      #chat-container::-webkit-scrollbar-thumb:hover {
+        background: #a0aec0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        DialoGPT Troll Chatbot by <a href="https://github.com/iMertt">M.D.</a>
+      </h1>
+      <div id="chat-container"></div>
+      <div class="input-container">
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Type your message here..."
+        />
+        <button id="send-button">Send</button>
+        <button id="reset-button">Reset</button>
+      </div>
+    </div>
+
+    <script>
+      const chatContainer = document.getElementById("chat-container");
+      const userInput = document.getElementById("user-input");
+      const sendButton = document.getElementById("send-button");
+      const resetButton = document.getElementById("reset-button");
+
+      // Update the addMessage function to use the new message classes
+      function addMessage(message, isUser) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = isUser
+          ? "message user-message"
+          : "message bot-message";
+        messageDiv.textContent = message;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, true);
+        userInput.value = "";
+
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message }),
+          });
+
+          const data = await response.json();
+          addMessage(data.response, false);
+        } catch (error) {
+          console.error("Error:", error);
+          addMessage(
+            "Sorry, there was an error processing your request.",
+            false
+          );
+        }
+      }
+
+      async function resetConversation() {
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message: "reset" }),
+          });
+
+          const data = await response.json();
+          addMessage(data.response, false);
+        } catch (error) {
+          console.error("Error:", error);
+          addMessage(
+            "Sorry, there was an error resetting the conversation.",
+            false
+          );
+        }
+      }
+
+      sendButton.addEventListener("click", sendMessage);
+      resetButton.addEventListener("click", resetConversation);
+
+      userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      // Welcome message
+      addMessage(
+        "Hello! I am a DialoGPT chatbot. How can I help you today?",
+        false
+      );
+    </script>
+  </body>
+</html>

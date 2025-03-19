@@ -1,0 +1,19 @@
+[
+  [
+    "Hello, how can I help you today?",
+    "I'm having trouble with my account login.",
+    "I'm sorry to hear that. Can you tell me what specific issue you're experiencing?",
+    "It says my password is incorrect, but I'm sure I'm using the right one.",
+    "Let's reset your password. I'll send a reset link to your email address. Is that okay?",
+    "Yes, that would be great, thank you."
+  ],
+  [
+    "Hi there! Welcome to our support chat.",
+    "Hi, I'm looking for information about your pricing plans.",
+    "Of course! We offer three plans: Basic, Pro, and Enterprise. Which one are you interested in?",
+    "Can you tell me more about the Pro plan?",
+    "The Pro plan costs $29.99 per month and includes all Basic features plus advanced analytics, priority support, and up to 10 team members.",
+    "That sounds perfect for my needs. How do I sign up?",
+    "You can sign up on our website by clicking the 'Get Started' button and selecting the Pro plan during checkout."
+  ]
+]
